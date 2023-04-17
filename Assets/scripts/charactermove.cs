@@ -19,10 +19,10 @@ public class charactermove : MonoBehaviour
     public float zvalue;
     public float xvalue;
     public GameObject directionpointer;
-    bool isgrounded;
+    public bool isgrounded;
     [SerializeField] Transform targetposition;
-    int layermask;
-    int layermask1;
+    public int layermask;
+    public int layermask1;
     AnimatorClipInfo[] myanimatorclipinfo;
     string currentanimation;
     Ray ray;
@@ -37,7 +37,7 @@ public class charactermove : MonoBehaviour
         myanimator = GetComponent<Animator>();
         myrigidbody = GetComponent<Rigidbody>();
         layermask = LayerMask.GetMask("target");
-        layermask1= LayerMask.GetMask("ground");
+        layermask1= LayerMask.GetMask("gorund");
     }
 
     // Update is called once per frame
@@ -172,19 +172,30 @@ public class charactermove : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("name "+collision.gameObject.name);
-        if (collision.collider.gameObject.layer== layermask1)
+        Debug.Log("on collider");
+       
+        if (1<<collision.collider.gameObject.layer== layermask1)
         {
-            
+            Debug.Log("name " + collision.gameObject.name);
             isgrounded = true;
         }
     }
 
     private void OnCollisionExit(Collision collision)
     {
-        if (collision.collider.gameObject.name == "ground")
+        if (1<<collision.collider.gameObject.layer == layermask1)
         {
+            Debug.Log("in exit");
             isgrounded = false;
         }
+    }
+    private void OnCollisionStay(Collision collision)
+    {
+        if (1 << collision.collider.gameObject.layer == layermask1)
+        {
+            Debug.Log("name " + collision.gameObject.name);
+            isgrounded = true;
+        }
+
     }
 }
